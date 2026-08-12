@@ -16,18 +16,53 @@ window.addEventListener("load", () => {
 
     const data = new Array(28).fill().map(() => new Array(28).fill(0));
 
-    canvas.addEventListener("mousedown", () => {
+    canvas.addEventListener("mousedown", (e) => {
         isDrawing = true;
+        const rect = canvas.getBoundingClientRect();
+        handleDraw(e.clientX - rect.left, e.clientY - rect.top);
     });
 
     canvas.addEventListener("mousemove", (e) => {
         if (!isDrawing) return;
         const rect = canvas.getBoundingClientRect();
-        let x = e.clientX - rect.left;
-        let y = e.clientY - rect.top;
+        handleDraw(e.clientX - rect.left, e.clientY - rect.top);
+    });
 
-        x = Math.floor(x / 10);
-        y = Math.floor(y / 10);
+    canvas.addEventListener("mouseup", () => { isDrawing = false; });
+    canvas.addEventListener("mouseleave", () => { isDrawing = false; });
+
+
+    function getTouchPos(e) {
+        const rect = canvas.getBoundingClientRect();
+        const touch = e.touches[0];
+        return {
+            x: touch.clientX - rect.left,
+            y: touch.clientY - rect.top
+        };
+    }
+
+    canvas.addEventListener("touchstart", (e) => {
+        isDrawing = true;
+        const pos = getTouchPos(e);
+        handleDraw(pos.x, pos.y);
+        e.preventDefault();
+    }, { passive: false });
+
+    canvas.addEventListener("touchmove", (e) => {
+        if (!isDrawing) return;
+        const pos = getTouchPos(e);
+        handleDraw(pos.x, pos.y);
+        e.preventDefault();
+    }, { passive: false });
+
+    canvas.addEventListener("touchend", () => { isDrawing = false; });
+    canvas.addEventListener("touchcancel", () => { isDrawing = false; });
+
+
+
+    function handleDraw(clientX, clientY) {
+        let x = Math.floor(clientX / 10);
+        let y = Math.floor(clientY / 10);
 
         ctx.fillStyle = "white";
         draw(x, y);
@@ -35,21 +70,13 @@ window.addEventListener("load", () => {
         draw(x - 1, y);
         draw(x, y + 1);
         draw(x, y - 1);
-    });
+    }
 
     function draw(x, y) {
         if (x < 0 || x >= 28 || y < 0 || y >= 28) return;
         ctx.fillRect(x * 10, y * 10, 10, 10);
         data[y][x] = 1;
     }
-
-    canvas.addEventListener('mouseup', () => {
-        isDrawing = false;
-    });
-
-    canvas.addEventListener('mouseleave', () => {
-        isDrawing = false;
-    });
 
     document.getElementById("remove").addEventListener("click", () => {
         ctx.clearRect(0, 0, 280, 280);
