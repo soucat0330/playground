@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>learning</title>
+    <script type="module" src="number.js"></script>
+    <style>
+        #remove,
+        #predict {
+            height: 50px;
+            width: 100px;
+            background-color: rgb(95, 183, 255);
+            color: white;
+            font-weight: bold;
+            font-size: 20px;
+        }
+    </style>
+</head>
+
+<body>
+    <div>
+        <canvas id="canvas" width="280px" height="280px" style="background-color: black;"></canvas>
+    </div>
+    <button id="remove">消去</button>
+    <button id="predict">予測</button>
+    <br>
+    <div style="display: none;">
+        <button id="learn">学習</button>
+        <input type="file" id="image">
+        <input type="file" id="label">
+    </div>
+</body>
+
+</html>
